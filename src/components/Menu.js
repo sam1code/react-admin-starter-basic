@@ -10,9 +10,9 @@ export default function BasicMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const handleClick = (event, target) => {
+
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-    navigate(target);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -58,11 +58,19 @@ export default function BasicMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={(e) => handleClose(e, "/profile")}>Profile</MenuItem>
+        <MenuItem
+          onClick={(e) => {
+            navigate("/profile");
+            handleClose(e);
+          }}
+        >
+          Profile
+        </MenuItem>
         <MenuItem
           onClick={async (e) => {
-            await handleLogout(e);
             handleClose(e);
+            await handleLogout(e);
+            navigate("/login");
           }}
         >
           Logout

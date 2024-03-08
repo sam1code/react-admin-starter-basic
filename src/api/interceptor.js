@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const apiUrl = "http://localhost:3001/v1";
+
 const instance = axios.create({
-  baseURL: "http://localhost:3001/v1",
+  baseURL: apiUrl,
 });
 
 instance.interceptors.request.use(
@@ -19,13 +21,14 @@ instance.interceptors.request.use(
 
 const refreshAuthLogic = (failedRequest) =>
   axios
-    .get("/refresh", {
+    .get(apiUrl + "/admin/refresh", {
       headers: {
-        "x-refresh-token": "refreshToken",
+        "x-refresh-token": localStorage.getItem("refreshToken"),
       },
     })
     .then((tokenRefreshResponse) => {
-      localStorage.setItem("token", tokenRefreshResponse.data.token);
+      console.log("Token refreshed", tokenRefreshResponse.data.jwtToken);
+      localStorage.setItem("token", tokenRefreshResponse.data.jwtToken);
       localStorage.setItem(
         "refreshToken",
         tokenRefreshResponse.data.refreshToken
@@ -42,9 +45,8 @@ instance.interceptors.response.use(
   (error) => {
     const originalRequest = error.config;
     if (
-      error.response.status === 401 &&
-      !originalRequest._retry &&
-      error.response.data.message === "Token expired"
+      error.response.status === 403 &&
+      error.response.data.message === "JWT_EXPIRED"
     ) {
       originalRequest._retry = true;
       return refreshAuthLogic(error).then(() => {
