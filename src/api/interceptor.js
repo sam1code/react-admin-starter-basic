@@ -27,7 +27,6 @@ const refreshAuthLogic = (failedRequest) =>
       },
     })
     .then((tokenRefreshResponse) => {
-      console.log("Token refreshed", tokenRefreshResponse.data.jwtToken);
       localStorage.setItem("token", tokenRefreshResponse.data.jwtToken);
       localStorage.setItem(
         "refreshToken",
