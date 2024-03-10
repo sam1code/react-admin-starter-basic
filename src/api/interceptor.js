@@ -35,6 +35,13 @@ const refreshAuthLogic = (failedRequest) =>
       failedRequest.response.config.headers["Authorization"] =
         "Bearer " + tokenRefreshResponse.data.token;
       return Promise.resolve();
+    })
+    .catch((err) => {
+      console.error(err.message);
+      if (err.response.status === 401 || err.response.status === 403) {
+        localStorage.clear();
+        window.location.reload();
+      }
     });
 
 instance.interceptors.response.use(
@@ -55,5 +62,75 @@ instance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const logout = async () => {
+  try {
+    await instance.head("/admin/logout", {
+      headers: {
+        "x-refresh-token": localStorage.getItem("refreshToken"),
+      },
+    });
+    localStorage.clear();
+    window.location.reload();
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const getAdmins = async () => {
+  const response = await instance.get("/admin/admins");
+  return response.data;
+};
+
+export const getProfile = async () => {
+  const response = await instance.get("/admin/detail");
+  return response.data;
+};
+
+export const getUsers = async () => {
+  try {
+    const response = await instance.get("/admin/users");
+    return response.data;
+  } catch (err) {
+    console.error(err.message);
+  }
+};
+
+export const getCategories = async () => {
+  const response = await instance.get("/admin/categories");
+  return response.data;
+};
+
+export const createCategory = async (category) => {
+  console.log(category);
+  const response = await instance.post("/admin/category", category);
+  return response.data;
+};
+
+export const updateCategory = async (category) => {
+  const response = await instance.put(`/admin/category/${category._id}`, {
+    name: category.name,
+    slug: category.slug,
+  });
+  return response.data;
+};
+
+export const getTags = async () => {
+  const response = await instance.get("/admin/tags");
+  return response.data;
+};
+
+export const createTag = async (tag) => {
+  const response = await instance.post("/admin/tag", tag);
+  return response.data;
+};
+
+export const updateTag = async (tag) => {
+  const response = await instance.put(`/admin/tag/${tag._id}`, {
+    name: tag.name,
+    slug: tag.slug,
+  });
+  return response.data;
+};
 
 export default instance;

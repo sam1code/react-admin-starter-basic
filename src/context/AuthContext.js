@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { getProfile } from "../api/interceptor";
 
 export const AuthContext = createContext();
 
@@ -6,20 +7,40 @@ export const AuthProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({
     isAuthenticated: false,
     user: null,
+    isLoading: true,
   });
 
+  const getUserDetailsOnRefresh = async () => {
+    try {
+      const response = await getProfile();
+      localStorage.setItem("user", JSON.stringify(response));
+      setAuthInfo({
+        isAuthenticated: true,
+        user: response,
+        isLoading: false,
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("token") !== null;
-    setAuthInfo({
-      isAuthenticated,
-      user: JSON.parse(localStorage.getItem("user") || "{}"),
-    });
+    if (localStorage.getItem("token")) {
+      getUserDetailsOnRefresh();
+    } else {
+      setAuthInfo({
+        isAuthenticated: false,
+        user: null,
+        isLoading: false,
+      });
+    }
   }, []);
 
-  const updateAuthInfo = (isAuthenticated, token) => {
+  const updateAuthInfo = (isAuthenticated) => {
     setAuthInfo({
       isAuthenticated,
       user: JSON.parse(localStorage.getItem("user") || "{}"),
+      isLoading: false,
     });
   };
 

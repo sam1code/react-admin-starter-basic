@@ -2,26 +2,41 @@ import { Sidebar, Menu, MenuItem, useProSidebar } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import CategoryIcon from "@mui/icons-material/Category";
+import StyleIcon from "@mui/icons-material/Style";
 import { Navigate, useLocation } from "react-router-dom";
 import MenuBox from "./Menu";
 import { useNavigate } from "react-router-dom";
 import ArticleIcon from "@mui/icons-material/Article";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ReportIcon from "@mui/icons-material/Report";
+import { useEffect } from "react";
 
 function Layout({ isAuthenticated, children }) {
   const { collapseSidebar } = useProSidebar();
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      collapseSidebar();
+    }
+  }, []);
+
+  if (isAuthenticated === false) {
     return <Navigate to="/login" />;
   }
 
-  // currently active route
-
   return (
-    <div id="app" style={({ height: "100vh" }, { display: "flex" })}>
+    <div
+      id="app"
+      style={{
+        height: "100vh",
+        display: "flex",
+        width: "100vw",
+        overflow: "hidden",
+      }}
+    >
       <Sidebar style={{ height: "100vh" }}>
         <Menu>
           <MenuItem
@@ -73,10 +88,30 @@ function Layout({ isAuthenticated, children }) {
             Users
           </MenuItem>
           <MenuItem
-            icon={<ReportIcon />}
-            onClick={() => navigate("/repots")}
+            icon={<CategoryIcon />}
+            onClick={() => navigate("/categories")}
             style={{
-              backgroundColor: location.pathname === "/repots" ? "#F0F0F0" : "",
+              backgroundColor:
+                location.pathname === "/categories" ? "#F0F0F0" : "",
+            }}
+          >
+            Categories
+          </MenuItem>
+          <MenuItem
+            icon={<StyleIcon />}
+            onClick={() => navigate("/tags")}
+            style={{
+              backgroundColor: location.pathname === "/tags" ? "#F0F0F0" : "",
+            }}
+          >
+            Tags
+          </MenuItem>
+          <MenuItem
+            icon={<ReportIcon />}
+            onClick={() => navigate("/reports")}
+            style={{
+              backgroundColor:
+                location.pathname === "/reports" ? "#F0F0F0" : "",
             }}
           >
             Reports

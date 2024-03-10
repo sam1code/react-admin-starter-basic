@@ -4,14 +4,17 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProSidebarProvider } from "react-pro-sidebar";
+import LoadingProvider from "./context/LoadingContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <AuthProvider>
-    <ProSidebarProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ProSidebarProvider>
-  </AuthProvider>
+  <LoadingProvider>
+    <AuthProvider>
+      <ProSidebarProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ProSidebarProvider>
+    </AuthProvider>
+  </LoadingProvider>
 );
