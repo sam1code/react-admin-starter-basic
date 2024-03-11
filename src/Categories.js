@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getCategories } from "./api/interceptor";
 import {
   Button,
@@ -11,20 +11,25 @@ import {
   TableRow,
 } from "@mui/material";
 import CategoryModal from "./components/CategoryModal";
+import { LoadingContext } from "./context/LoadingContext";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [hoveredCategoryId, setHoveredCategoryId] = useState();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [reload, setReload] = useState(true);
+  const { setLoading } = useContext(LoadingContext);
 
   const categoriesFun = async () => {
     try {
+      setLoading(true);
       const resp = await getCategories();
       setCategories(resp.articleCategory || []);
       setReload(false);
     } catch (err) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 

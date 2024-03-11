@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getUsers } from "./api/interceptor";
 import {
   Paper,
@@ -9,17 +9,22 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+import { LoadingContext } from "./context/LoadingContext";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const { setLoading } = useContext(LoadingContext);
 
   const usersFun = async () => {
     try {
+      setLoading(true);
       const resp = await getUsers();
       console.log(resp.users);
       setUsers(resp.users);
     } catch (err) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 

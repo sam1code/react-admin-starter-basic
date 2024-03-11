@@ -4,12 +4,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
-import instance, { logout } from "../api/interceptor";
+import { logout } from "../api/interceptor";
+import { AuthContext } from "../context/AuthContext";
 
 export default function BasicMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  const { updateAuthInfo } = React.useContext(AuthContext);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -54,7 +57,8 @@ export default function BasicMenu() {
           onClick={async (e) => {
             handleClose(e);
             await logout(e);
-            navigate("/login");
+            localStorage.clear();
+            updateAuthInfo(false);
           }}
         >
           Logout

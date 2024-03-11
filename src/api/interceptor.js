@@ -63,18 +63,22 @@ instance.interceptors.response.use(
   }
 );
 
+export const login = async (username, password) => {
+  const response = await instance.post("/admin/auth", {
+    email: username,
+    password: password,
+  });
+  return response;
+};
+
 export const logout = async () => {
-  try {
-    await instance.head("/admin/logout", {
-      headers: {
-        "x-refresh-token": localStorage.getItem("refreshToken"),
-      },
-    });
-    localStorage.clear();
-    window.location.reload();
-  } catch (err) {
-    console.error(err.message);
-  }
+  await instance.head("/admin/logout", {
+    headers: {
+      "x-refresh-token": localStorage.getItem("refreshToken"),
+    },
+  });
+  localStorage.clear();
+  window.location.reload();
 };
 
 export const getAdmins = async () => {

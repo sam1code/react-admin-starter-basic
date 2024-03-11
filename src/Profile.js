@@ -5,10 +5,12 @@ import { getProfile, logout } from "./api/interceptor";
 import { LoadingContext } from "./context/LoadingContext";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
 
 const Profile = () => {
   const [profile, setProfile] = useState({});
   const { setLoading } = useContext(LoadingContext);
+  const { updateAuthInfo } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const getProfileFun = async () => {
@@ -17,6 +19,18 @@ const Profile = () => {
       const response = await getProfile();
       setProfile(response);
       setLoading(false);
+    } catch (err) {
+      console.error(err.message);
+      setLoading(false);
+    }
+  };
+
+  const logoutFun = async () => {
+    try {
+      setLoading(true);
+      await logout();
+      setLoading(false);
+      updateAuthInfo(false);
     } catch (err) {
       console.error(err.message);
       setLoading(false);
@@ -94,7 +108,7 @@ const Profile = () => {
           <b>Created At:</b> {new Date(profile.createdAt).toLocaleString()}
         </p>
       </Box>
-      <Button variant="outlined" color="error" onClick={logout}>
+      <Button variant="outlined" color="error" onClick={logoutFun}>
         Logout
       </Button>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getTags } from "./api/interceptor";
 import {
   Button,
@@ -11,20 +11,25 @@ import {
   TableRow,
 } from "@mui/material";
 import TagModal from "./components/TagModal";
+import { LoadingContext } from "./context/LoadingContext";
 
 const Tags = () => {
   const [tags, setTags] = useState([]);
   const [hoveredTagId, setHoveredCategoryId] = useState();
   const [selectedTag, setSelectedTag] = useState(null);
   const [reload, setReload] = useState(true);
+  const { setLoading } = useContext(LoadingContext);
 
   const tagsFun = async () => {
     try {
+      setLoading(true);
       const resp = await getTags();
       setTags(resp.articleTag || []);
       setReload(false);
     } catch (err) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
