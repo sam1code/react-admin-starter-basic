@@ -19,53 +19,63 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, personName, theme) {
+function getStyles(name, tagName, theme) {
   return {
     fontWeight:
-      personName.indexOf(name) === -1
+      tagName.indexOf(name) === -1
         ? theme.typography.fontWeightRegular
         : theme.typography.fontWeightMedium,
   };
 }
 
-export default function MultipleSelectChip({ names, title }) {
+export default function MultipleSelectChip({
+  names,
+  title,
+  setValues,
+  values,
+}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [tagName, setTagName] = React.useState([]);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
+    setTagName(typeof value === "string" ? value.split(",") : value);
+    setValues(
+      typeof value === "string"
+        ? value.split(",").map((v) => names[v])
+        : value.map((v) => names[v])
+    );
   };
 
   return (
     <div>
       <FormControl sx={{ width: "100%" }}>
-        <InputLabel id="demo-multiple-chip-label">{title}</InputLabel>
+        <InputLabel id="multiple-chip-label">{title}</InputLabel>
         <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
+          labelId="multiple-chip-label"
+          id="multiple-chip"
           multiple
-          value={personName}
+          value={tagName}
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label={title} />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} />
+                <Chip key={value} label={names[value].name} />
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {names.map((name, value) => (
             <MenuItem
               key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              value={value}
+              style={getStyles(name, tagName, theme)}
             >
-              {name}
+              {name.name}
             </MenuItem>
           ))}
         </Select>

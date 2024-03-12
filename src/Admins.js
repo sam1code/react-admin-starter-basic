@@ -1,22 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
-import DataCard from "./components/DataCard";
 import { getAdmins } from "./api/interceptor";
 import { Button } from "@mui/material";
 import { LoadingContext } from "./context/LoadingContext";
 import AdminCard from "./components/AdminCard";
 import AdminEditModal from "./components/AdminEditModal";
+import randomString from "./utilities/string";
 
 const Admins = () => {
   const [admins, setAdmins] = useState([]);
   const { setLoading } = useContext(LoadingContext);
   const [edit, setEdit] = useState(null);
   const [create, setCreate] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const adminsFun = async () => {
     setLoading(true);
     try {
       const resp = await getAdmins();
-      console.log(resp.admins);
       setAdmins(resp.admins);
     } catch (err) {
       console.error(err.message);
@@ -28,12 +28,23 @@ const Admins = () => {
     adminsFun();
   }, []);
 
+  useEffect(() => {
+    if (reload) {
+      adminsFun();
+      setReload(false);
+    }
+  }, [reload]);
+
   return (
     <div>
       <AdminEditModal
         open={edit}
-        handleClose={() => setEdit(null)}
+        handleClose={() => {
+          setEdit(null);
+          setCreate(false);
+        }}
         create={create}
+        setReload={setReload}
       />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2>Admins({admins.length})</h2>
@@ -56,6 +67,7 @@ const Admins = () => {
               allowedCategories: [],
               allowedRoles: [],
               status: "pending",
+              password: randomString(8),
             });
             setCreate(true);
           }}
@@ -66,7 +78,7 @@ const Admins = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          gap: "10px",
           flexWrap: "wrap",
         }}
       >

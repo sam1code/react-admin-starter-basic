@@ -25,10 +25,6 @@ const Home = () => {
     getDashboardData();
   }, []);
 
-  useEffect(() => {
-    console.log(dashboardData);
-  }, [dashboardData]);
-
   return (
     <div>
       <Box

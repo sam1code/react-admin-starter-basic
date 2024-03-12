@@ -1,11 +1,15 @@
 import { Card, CardContent } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import generateRandomColor from "../utilities/generateRandomColor";
 import EditIcon from "@mui/icons-material/Edit";
 
 const AdminCard = ({ admin, setEdit }) => {
   const [hover, setHover] = React.useState(false);
   const [color] = React.useState(generateRandomColor());
+
+  useEffect(() => {
+    console.log(admin);
+  }, [admin]);
 
   return (
     <Card
@@ -68,12 +72,12 @@ const AdminCard = ({ admin, setEdit }) => {
           {admin?.email}
         </p>
         <p>
-          <b>F Name:</b>
-          {admin?.firstName}
+          <b>F Name: </b>
+          {admin?.fName}
         </p>
         <p>
-          <b>L Name:</b>
-          {admin?.lastName}
+          <b>L Name: </b>
+          {admin?.lName}
         </p>
         <p>
           <b>Phone: </b>
@@ -81,9 +85,7 @@ const AdminCard = ({ admin, setEdit }) => {
         </p>
         <p>
           <b>Roles: </b>
-          {admin?.isSuperAdmin
-            ? "Super Admin"
-            : admin?.allowedRoles?.join(", ")}
+          {admin?.isSuperAdmin ? "Super Admin" : admin?.allowedRoles.join(", ")}
         </p>
 
         <p>

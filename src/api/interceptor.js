@@ -91,6 +91,11 @@ export const getProfile = async () => {
   return response.data;
 };
 
+export const createUpdateAdmin = async (admin) => {
+  const response = await instance.post("/admin/admin", admin);
+  return response.data;
+};
+
 export const getUsers = async () => {
   try {
     const response = await instance.get("/admin/users");
@@ -106,7 +111,6 @@ export const getCategories = async () => {
 };
 
 export const createCategory = async (category) => {
-  console.log(category);
   const response = await instance.post("/admin/category", category);
   return response.data;
 };

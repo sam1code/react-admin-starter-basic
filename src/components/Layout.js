@@ -12,7 +12,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ReportIcon from "@mui/icons-material/Report";
 import { useEffect } from "react";
 
-function Layout({ isAuthenticated, children }) {
+function Layout({ authInfo, children, requiredRole }) {
   const { collapseSidebar } = useProSidebar();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,8 +23,30 @@ function Layout({ isAuthenticated, children }) {
     }
   }, []);
 
-  if (isAuthenticated === false) {
+  if (authInfo?.isAuthenticated === false) {
     return <Navigate to="/login" />;
+  }
+
+  if (authInfo?.user?.isSuperAdmin === false) {
+    switch (requiredRole) {
+      case "editor":
+        if (!authInfo?.user?.allowedRoles.includes("editor")) {
+          return <Navigate to="/" />;
+        }
+        break;
+      case "publisher":
+        if (!authInfo?.user?.allowedRoles.includes("publisher")) {
+          return <Navigate to="/" />;
+        }
+        break;
+      case "reporter":
+        if (!authInfo?.user?.allowedRoles.includes("reporter")) {
+          return <Navigate to="/" />;
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   return (
@@ -148,6 +170,7 @@ function Layout({ isAuthenticated, children }) {
         <div
           style={{
             padding: "20px",
+            overflow: "auto",
           }}
         >
           {children}

@@ -71,7 +71,7 @@ const CategoryModal = ({ open, handleClose, setReload }) => {
       handleClose();
     } catch (err) {
       setLoading(false);
-      console.log(err.message);
+      console.error(err.message);
       setSnackbar({
         open: true,
         severity: "error",

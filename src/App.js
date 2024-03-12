@@ -27,7 +27,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Dashboard />
             </Layout>
           }
@@ -35,7 +35,7 @@ const App = () => {
         <Route
           path="/profile"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Profile />
             </Layout>
           }
@@ -43,7 +43,7 @@ const App = () => {
         <Route
           path="/articles"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Article />
             </Layout>
           }
@@ -51,7 +51,7 @@ const App = () => {
         <Route
           path="/admins"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Admins />
             </Layout>
           }
@@ -59,7 +59,7 @@ const App = () => {
         <Route
           path="/users"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Users />
             </Layout>
           }
@@ -67,7 +67,7 @@ const App = () => {
         <Route
           path="/categories"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Categories />
             </Layout>
           }
@@ -75,7 +75,7 @@ const App = () => {
         <Route
           path="/tags"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Tags />
             </Layout>
           }
@@ -83,7 +83,7 @@ const App = () => {
         <Route
           path="/reports"
           element={
-            <Layout isAuthenticated={authInfo.isAuthenticated}>
+            <Layout authInfo={authInfo}>
               <Repots />
             </Layout>
           }

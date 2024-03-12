@@ -19,7 +19,6 @@ const Users = () => {
     try {
       setLoading(true);
       const resp = await getUsers();
-      console.log(resp.users);
       setUsers(resp.users);
     } catch (err) {
       console.error(err.message);
